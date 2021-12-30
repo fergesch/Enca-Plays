@@ -1,13 +1,14 @@
 tasks:
   - init: |
       echo 'TODO: build project'
+      python3 -m venv /workspace/BATTLESHIP/.venv
+      source /workspace/BATTLESHIP/.venv/bin/activate
       python3 -m pip install --upgrade pip
       pip install -r requirements.txt
+      deactivate
     command: |
       echo 'TODO: start app'
-      python3 -m pip install --upgrade pip
-      pip install -r requirements.txt
-
+      source /workspace/BATTLESHIP/.venv/bin/activate
 ports:
   - port: 8080
 
