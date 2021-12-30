@@ -1,9 +1,15 @@
 tasks:
   - init: |
       echo 'TODO: build project'
+      python3 -m pip install --upgrade pip
       pip install -r requirements.txt
     command: |
       echo 'TODO: start app'
+      python3 -m pip install --upgrade pip
+      pip install -r requirements.txt
+
+ports:
+  - port: 8080
 
 vscode:
   extensions:
