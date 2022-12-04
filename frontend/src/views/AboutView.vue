@@ -1,6 +1,17 @@
+<script>
+import GameBoard from "@/components/GameBoard.vue";
+
+export default {
+  components: {
+    GameBoard,
+  },
+};
+</script>
+
 <template>
   <div class="about">
     <h1>This is an about page</h1>
+    <GameBoard />
   </div>
 </template>
 
@@ -8,7 +19,7 @@
 @media (min-width: 1024px) {
   .about {
     min-height: 100vh;
-    display: flex;
+    /* display: flex; */
     align-items: center;
   }
 }
