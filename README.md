@@ -17,3 +17,13 @@ npm install
 npm run lint
 npm run dev
 ```
+
+## BACKEND
+
+```
+flask --app backend/app.py run 
+```
+OR 
+```
+python backend/app.py
+```
