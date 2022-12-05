@@ -1,17 +1,38 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+
+import { useGameStore } from "@/stores/GameStore";
+import { io } from 'socket.io-client';
+
+export default {
+  setup() {
+    const gameStore = useGameStore();
+    return { gameStore };
+  },
+
+  mounted() {
+    this.gameStore.socketObj = io("ws://127.0.0.1:5000", { transports: ['websocket', 'polling', 'flashsocket'] });
+
+    // Should try to move the below on commands into another file
+    this.gameStore.socketObj.on('after connect', (data) => {
+      console.log(data)
+    })
+
+    this.gameStore.socketObj.on("joined", (data) => {
+      console.log(data)
+    })
+
+  },
+  beforeUnmount() {
+    this.gameStore.socketObj.disconnect();
+  },
+}
 </script>
 
 <template>
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />

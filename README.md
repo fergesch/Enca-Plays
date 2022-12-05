@@ -17,3 +17,19 @@ npm install
 npm run lint
 npm run dev
 ```
+
+### IDEAS
+* Create a websocket object in the pina store and use that to send and receive events so each vue component
+doesn't have to initialize a websocket client
+
+* Game state will be entirely managed in Pina store
+
+## BACKEND
+
+```
+flask --app backend/app.py run 
+```
+OR 
+```
+python backend/app.py
+```
