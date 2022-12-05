@@ -14,6 +14,14 @@ class SocketioService {
     this.socket.on('after connect', (data) => {
       console.log(data)
     });
+
+    this.socket.on("joined", (data) => {
+      console.log(data)
+    })
+  }
+
+  create_game_event() {
+    this.socket.emit("join", {"room": 123, "username": "Player 1"})
   }
 
   button_click_event(i, j) {
