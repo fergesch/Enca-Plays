@@ -12,7 +12,7 @@ export default {
   },
 
   mounted() {
-    this.gameStore.socketObj = io("ws://127.0.0.1:5000", { transports: ['websocket', 'polling', 'flashsocket'] });
+    this.gameStore.socketObj = io(import.meta.env.VITE_API_ENDPOINT, { transports: ['websocket', 'polling', 'flashsocket'] });
 
     // Should try to move the below on commands into another file
     this.gameStore.socketObj.on('after connect', (data) => {
@@ -21,6 +21,7 @@ export default {
 
     this.gameStore.socketObj.on("joined", (data) => {
       console.log(data)
+      this.gameStore.recieve_room(data['room'])
     })
 
   },

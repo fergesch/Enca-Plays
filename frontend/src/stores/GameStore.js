@@ -25,11 +25,18 @@ export const useGameStore = defineStore("GameStore", {
 
     actions: {
         create_game_event() { 
-            this.socketObj.emit("join", { "room": 123, "username": this.username })
+            this.socketObj.emit("create_room", { "username": this.username })
+        },
+        join_game_event() {
+            this.socketObj.emit("join", { "room": this.room, "username": this.username })
         },
         button_click_event(i, j) {
             this.socketObj.emit("grid_click", { "i": i, "j": j })
-        }
+        },
+
+        recieve_room(room) {
+            this.room = room;
+        },
         // changeMatch(loc) {
         //   // given position of letter [ith word, jth letter] want to flip between -1,0,1
         //   Object.values(this.words[loc[0]]).forEach((value) => {
