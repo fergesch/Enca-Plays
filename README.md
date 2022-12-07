@@ -26,6 +26,8 @@ doesn't have to initialize a websocket client
 
 ## BACKEND
 
+To create local virtual environment run `env_config.sh` from `backend/` directory
+
 ```
 flask --app backend/app.py run 
 ```
