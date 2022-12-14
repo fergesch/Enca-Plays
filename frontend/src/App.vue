@@ -24,6 +24,11 @@ export default {
       this.gameStore.recieve_room(data['room'])
     })
 
+    this.gameStore.socketObj.on("modal_event", (data) => {
+      this.gameStore.modalMessage = data['message']
+      this.gameStore.showModal = true
+    })
+
   },
   beforeUnmount() {
     this.gameStore.socketObj.disconnect();

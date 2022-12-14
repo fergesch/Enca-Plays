@@ -29,7 +29,7 @@ doesn't have to initialize a websocket client
 To create local virtual environment run `env_config.sh` from `backend/` directory
 
 ```
-flask --app backend/app.py run 
+flask --app backend/app.py --debug run
 ```
 OR 
 ```

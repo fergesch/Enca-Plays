@@ -9,13 +9,8 @@ export const useGameStore = defineStore("GameStore", {
             socketObj: Object,
             username: "",
             room: "",
-            words: [],
-            recoWord: {
-                rnd_cnt: [],
-                word: "",
-                words: [],
-            },
             showModal: false,
+            modalMessage: "TEST",
         };
     },
 

@@ -1,5 +1,6 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
+import modalPopup from "@/components/modalPopup.vue";
 
 export default {
   setup() {
@@ -9,6 +10,7 @@ export default {
 
   name: 'Board',
   components: {
+    modalPopup
   },
 }
 </script>
@@ -23,5 +25,6 @@ export default {
     <br/>
     <input v-model="gameStore.room" placeholder="Enter room" />
     <button @click="this.gameStore.join_game_event">Join Game</button>
+    <modalPopup :show="gameStore.showModal" :message="gameStore.modalMessage" @close="gameStore.showModal = false"></modalPopup>
   </main>
 </template>
