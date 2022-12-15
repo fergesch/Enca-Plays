@@ -1,7 +1,12 @@
 <script>
 import GameBoard from "@/components/GameBoard.vue";
+import { useGameStore } from "@/stores/GameStore";
 
 export default {
+  setup() {
+    const gameStore = useGameStore();
+    return { gameStore };
+  },
   components: {
     GameBoard,
   },
@@ -10,17 +15,25 @@ export default {
 
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <!-- https://fonts.google.com/icons?selected=Material+Icons&icon.query=user -->
+    <div class="player-chips">
+      <q-chip icon="person" :label="gameStore.username" />
+      <q-chip icon="room" :label="gameStore.room" />
+    </div>
+
     <GameBoard />
   </div>
 </template>
 
 <style>
-@media (min-width: 1024px) {
+/* .player-class {
+
+} */
+/* @media (min-width: 1024px) {
   .about {
     min-height: 100vh;
-    /* display: flex; */
+    display: flex;
     align-items: center;
   }
-}
+} */
 </style>

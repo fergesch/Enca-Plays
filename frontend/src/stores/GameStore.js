@@ -11,6 +11,40 @@ export const useGameStore = defineStore("GameStore", {
             room: "",
             showModal: false,
             modalMessage: "TEST",
+            shipPositions: { // this should all be 0 indexed; fix all 10 values
+                "Carrier": [
+                    [1, 5],
+                    [2, 5],
+                    [3, 5],
+                    [4, 5],
+                    [5, 5],
+                ], "Battleship": [
+                    [6,5],
+                    [6,6],
+                    [6,7],
+                    [6,8],
+                ], "Cruiser": [
+                    [3,10],
+                    [4,10],
+                    [5,10],
+                ], "Submarine": [
+                    [9,2],
+                    [9,3],
+                    [9,4],
+                ], "Destroyer": [
+                    [9,10],
+                    [10,10],
+                ],
+            },
+            myMissiles: [
+                [1, 1, true],  // this should be 0 indexed
+                [8, 4, false]
+            ],
+            oppMissiles: [
+                [10, 10, true],
+                [5, 6, false],
+                [2, 1, false],
+            ]
         };
     },
 
@@ -19,7 +53,7 @@ export const useGameStore = defineStore("GameStore", {
     // },
 
     actions: {
-        create_game_event() { 
+        create_game_event() {
             this.socketObj.emit("create_room", { "username": this.username })
         },
         join_game_event() {
