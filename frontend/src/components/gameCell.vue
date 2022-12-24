@@ -9,16 +9,18 @@ export default {
   props: ["val", "loc"],
   methods: {
     clickLog() {
-        console.log(this.val)
-        console.log(this.loc)
-    }
-  }
+      console.log(this.val);
+      console.log(this.loc);
+    },
+  },
 };
 </script>
 
 <template>
   <!-- <button :class="val" @click="this.gameStore.button_click_event(i,j)">{{ loc[0].toString() + "|" + loc[1].toString() }}</button> -->
-  <button :class="val" @click=clickLog>{{ loc[0].toString() + "|" + loc[1].toString() }}</button>
+  <button :class="val" @click="clickLog">
+    {{ loc[0].toString() + "|" + loc[1].toString() }}
+  </button>
 </template>
 
 <style scoped>

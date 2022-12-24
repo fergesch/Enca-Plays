@@ -2,7 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 
 import { useGameStore } from "@/stores/GameStore";
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
 export default {
   setup() {
@@ -11,36 +11,42 @@ export default {
   },
 
   mounted() {
-    this.gameStore.socketObj = io(import.meta.env.VITE_API_ENDPOINT, { transports: ['websocket', 'polling', 'flashsocket'] });
+    this.gameStore.socketObj = io(import.meta.env.VITE_API_ENDPOINT, {
+      transports: ["websocket", "polling", "flashsocket"],
+    });
 
     // Should try to move the below on commands into another file
-    this.gameStore.socketObj.on('after connect', (data) => {
-      console.log(data)
-    })
+    this.gameStore.socketObj.on("after connect", (data) => {
+      console.log(data);
+    });
 
     this.gameStore.socketObj.on("joined", (data) => {
-      console.log(data)
-      this.gameStore.recieve_room(data['room'])
-    })
+      console.log(data);
+      this.gameStore.recieve_room(data["room"]);
+    });
 
     this.gameStore.socketObj.on("modal_event", (data) => {
-      this.gameStore.modalMessage = data['message']
-      this.gameStore.showModal = true
-    })
-
+      this.gameStore.modalMessage = data["message"];
+      this.gameStore.showModal = true;
+    });
   },
   beforeUnmount() {
     this.gameStore.socketObj.disconnect();
   },
-}
+};
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/fergesch_logo.svg" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="@/assets/fergesch_logo.svg"
+      width="125"
+      height="125"
+    />
 
     <div class="wrapper">
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
