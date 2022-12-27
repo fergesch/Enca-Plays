@@ -23,6 +23,7 @@ export default {
     this.gameStore.socketObj.on("joined", (data) => {
       console.log(data);
       this.gameStore.recieve_room(data["room"]);
+      this.$router.push("/game")
     });
 
     this.gameStore.socketObj.on("modal_event", (data) => {
@@ -49,7 +50,7 @@ export default {
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/game">Game</RouterLink>
       </nav>
     </div>
   </header>

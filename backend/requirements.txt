@@ -2,3 +2,4 @@ python-socketio
 flask-socketio
 simple-websocket
 flask-cors
+autopep8

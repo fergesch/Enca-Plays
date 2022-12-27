@@ -56,10 +56,10 @@ def on_join(data):
 
 @socketio.on("submit_ships")
 def submit_ships(data):
-    locations = data["locations"]
+    ship_positions = data["shipPositions"]
     username = data['username']
     room = data['room']
-    board_actions.place_player_ships(username, room, locations)
+    board_actions.place_player_ships(username, room, ship_positions)
     emit("ships_submitted")
 
 

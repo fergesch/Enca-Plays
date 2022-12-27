@@ -20,7 +20,7 @@ export default {
 </script>
 
 <template>
-  <div class="about">
+  <div class="game">
     <!-- https://fonts.google.com/icons?selected=Material+Icons&icon.query=user -->
     <div class="player-chips">
       <q-chip icon="person" :label="gameStore.username" />
@@ -28,7 +28,6 @@ export default {
     </div>
 
     <GameBoard />
-    <button @click="this.gameStore.submit_ships()">Submit Ships</button>
   </div>
 </template>
 
@@ -37,7 +36,7 @@ export default {
 
 } */
 /* @media (min-width: 1024px) {
-  .about {
+  .game {
     min-height: 100vh;
     display: flex;
     align-items: center;
