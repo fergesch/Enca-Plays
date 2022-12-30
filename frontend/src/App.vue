@@ -23,7 +23,7 @@ export default {
     this.gameStore.socketObj.on("joined", (data) => {
       console.log(data);
       this.gameStore.recieve_room(data["room"]);
-      this.$router.push("/game")
+      this.$router.push("/game");
     });
 
     this.gameStore.socketObj.on("modal_event", (data) => {

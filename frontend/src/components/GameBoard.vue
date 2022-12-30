@@ -1,6 +1,7 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
 import gameCell from "./gameCell.vue";
+import {next_ship, fill_gaps} from "@/utils/Utils";
 
 export default {
   setup() {
@@ -9,13 +10,31 @@ export default {
   },
   name: "Board",
   methods: {
-        endSubPhase() {
-            
-        },
-        resetSubPhase(){
-
-        },
+    endSubPhase() {
+      let curr_phase = this.gameStore.gameSubPhase
+      let ship = curr_phase.split(" ")[0]
+      // assign values in store
+      let ship_locs = fill_gaps(this.gameStore.shipStart, this.gameStore.shipEnd)
+      let ships = [...this.gameStore.shipPositions]
+      ships.forEach(function (ship_value, index) {
+        console.log(index)
+        console.log(ship_value)
+        console.log(ships)
+        if (ship_value.ship == ship) {
+          ships[index]["locs"] = ship_locs
+        }
+      })
+      this.gameStore.shipPositions = ships
+      // let next_sub_phase = next_ship(curr_phase);
+      // this.gameStore.gameSubPhase = next_sub_phase;
+      // moving to next phase and clearing out state
+      this.gameStore.shipEnd = [];
+      this.gameStore.shipStart = [];
+      let next_sub_phase = next_ship(curr_phase);
+      this.gameStore.gameSubPhase = next_sub_phase;
     },
+    resetSubPhase() {},
+  },
 
   components: {
     gameCell,
@@ -46,7 +65,11 @@ export default {
   <div class="oppBoard">
     <div class="row" v-for="i in 10">
       <div v-for="j in 10">
-        <gameCell :val="this.gameStore.oppBoard[i - 1][j - 1]" :loc="[i - 1, j - 1]" board="oppBoard" />
+        <gameCell
+          :val="this.gameStore.oppBoard[i - 1][j - 1]"
+          :loc="[i - 1, j - 1]"
+          board="oppBoard"
+        />
         <!-- <gameCell :val="this.hitMap[i - 1][j - 1]" :loc="[i - 1, j - 1]" board="oppBoard"/> -->
       </div>
     </div>
@@ -55,14 +78,33 @@ export default {
   <div class="myBoard">
     <div class="row" v-for="i in 10">
       <div v-for="j in 10">
-        <gameCell :val="this.gameStore.myBoard[i - 1][j - 1]" :loc="[i - 1, j - 1]" board="myBoard" />
+        <gameCell
+          :val="this.gameStore.myBoard[i - 1][j - 1]"
+          :loc="[i - 1, j - 1]"
+          board="myBoard"
+        />
       </div>
     </div>
   </div>
   <!-- make a button that shows up in the SHIP Confirm subphase that sets shipPosition and moves to next ship -->
-  <button v-if="this.gameStore.gameSubPhase.includes('Confirm')" @click="endSubPhase">Confirm Ship</button>
-  <button v-if="this.gameStore.gameSubPhase.includes('Confirm')" @click="resetSubPhase">Reset Current Ship</button>
-  <button v-if="this.gameStore.gameSubPhase == 'Submit Ships'" @click="this.gameStore.submit_ships()">Submit Ships</button>
+  <button
+    v-if="this.gameStore.gameSubPhase.includes('Confirm')"
+    @click="endSubPhase"
+  >
+    Confirm Ship
+  </button>
+  <button
+    v-if="this.gameStore.gameSubPhase.includes('Confirm')"
+    @click="resetSubPhase"
+  >
+    Reset Current Ship
+  </button>
+  <button
+    v-if="this.gameStore.gameSubPhase == 'Submit Ships'"
+    @click="this.gameStore.submit_ships()"
+  >
+    Submit Ships
+  </button>
 </template>
 
 <style>

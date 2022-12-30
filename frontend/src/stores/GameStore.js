@@ -24,30 +24,30 @@ export const useGameStore = defineStore("GameStore", {
       shipEnd: [],
 
       shipPositions: [
-        // check for overlaps somewhere
+                // check for overlaps somewhere
         {
-          'ship': 'Carrier',
-          'locs': []
+          ship: "Carrier",
+          locs: [],
           // 'locs': [[1, 5],[2, 5],[3, 5],[4, 5],[5, 5]]
         },
         {
-          'ship': 'Battleship',
-          'locs': []
+          ship: "Battleship",
+          locs: [],
           // 'locs': [[7, 5],[7, 6],[7, 7],[7, 8]]
         },
         {
-          'ship': 'Submarine',
-          'locs': []
+          ship: "Submarine",
+          locs: [],
           // 'locs': [[3, 1],[4, 1],[5, 1]]
         },
         {
-          'ship': 'Cruiser',
-          'locs': []
+          ship: "Cruiser",
+          locs: [],
           // 'locs': [[9, 2],[9, 3],[9, 4]]
         },
         {
-          'ship': 'Destroyer',
-          'locs': []
+          ship: "Destroyer",
+          locs: [],
           // 'locs': [[0, 0],[0, 1]]
         },
       ],
@@ -65,19 +65,26 @@ export const useGameStore = defineStore("GameStore", {
 
   getters: {
     eligEnds(state) {
-      var shipOptions, currShip, shipLength, a, b, endOptions
-      shipOptions = { "Carrier": 5, "Battleship": 4, "Submarine": 3, "Cruiser": 3, "Destroyer": 2 }
-      currShip = state.gameSubPhase.split(" ")[0]
-      shipLength = shipOptions[currShip] - 1
-      a = state.shipStart[0]
-      b = state.shipStart[1]
+      var shipOptions, currShip, shipLength, a, b, endOptions;
+      shipOptions = {
+        Carrier: 5,
+        Battleship: 4,
+        Submarine: 3,
+        Cruiser: 3,
+        Destroyer: 2,
+      };
+      currShip = state.gameSubPhase.split(" ")[0];
+      shipLength = shipOptions[currShip] - 1;
+      a = state.shipStart[0];
+      b = state.shipStart[1];
       endOptions = [
         [a + shipLength, b],
         [a - shipLength, b],
         [a, b + shipLength],
-        [a, b - shipLength]
-      ]
-      return endOptions
+        [a, b - shipLength],
+      ];
+      // add check for collisions
+      return endOptions;
     },
 
     myBoard(state) {
@@ -90,21 +97,21 @@ export const useGameStore = defineStore("GameStore", {
 
           // condition for start position during setup phase
           if (state.shipStart[0] == i && state.shipStart[1] == j) {
-            matrix[i][j] = 5
+            matrix[i][j] = 5;
           }
           // condition for end ship during setup phase
           this.eligEnds.forEach(function (loc) {
             if (loc[0] == i && loc[1] == j) {
-              matrix[i][j] = 4
+              matrix[i][j] = 4;
             }
-          })
+          });
           // set ship positions
           state.shipPositions.forEach(function (ship) {
-            ship['locs'].forEach(function (loc) {
+            ship["locs"].forEach(function (loc) {
               if (loc[0] == i && loc[1] == j) {
-                matrix[i][j] = 1
+                matrix[i][j] = 1;
               }
-            })
+            });
           });
           // set hits and misses
           state.oppMissiles.forEach(function (missile) {
@@ -152,20 +159,19 @@ export const useGameStore = defineStore("GameStore", {
     },
 
     start_ship_event(i, j) {
-      this.shipStart = [i, j]
-      this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " End"
+      this.shipStart = [i, j];
+      this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " End";
     },
     end_ship_event(i, j) {
       // if (this.eligEnds.includes([i, j])) { // this doesnt work because [x,y] !== [x,y]
       var eligEndsStr = JSON.stringify(this.eligEnds);
-      var locStr = JSON.stringify([i,j])
+      var locStr = JSON.stringify([i, j]);
       var c = eligEndsStr.indexOf(locStr);
       if (c != -1) {
-        this.shipEnd = [i, j]
-        this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " Confirm"
-      }
-      else {
-        console.log("Bad endpoint")
+        this.shipEnd = [i, j];
+        this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " Confirm";
+      } else {
+        console.log("Bad endpoint");
       }
     },
 
