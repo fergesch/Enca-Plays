@@ -22,8 +22,7 @@ export default {
         }
       })
       this.gameStore.shipPositions = ships
-      // let next_sub_phase = next_ship(curr_phase);
-      // this.gameStore.gameSubPhase = next_sub_phase;
+
       // moving to next phase and clearing out state
       this.gameStore.shipEnd = [];
       this.gameStore.shipStart = [];
@@ -42,25 +41,6 @@ export default {
   components: {
     gameCell,
   },
-
-  // computed: {
-  //   hitMap() {
-  //     var matrix = [];
-  //     for (var i = 0; i <= 9; i++) {
-  //       matrix[i] = [];
-  //       for (var j = 0; j <= 9; j++) {
-  //         matrix[i][j] = "ocean";
-  //         this.gameStore.myMissiles.forEach(function (missile) {
-  //           if (missile[0] == i && missile[1] == j) {
-  //             matrix[i][j] = missile[2] ? "hit" : "miss";
-  //           }
-  //         });
-  //       }
-  //     }
-  //     console.log(matrix);
-  //     return matrix;
-  //   },
-  // },
 };
 </script>
 
@@ -73,7 +53,6 @@ export default {
           :loc="[i - 1, j - 1]"
           board="oppBoard"
         />
-        <!-- <gameCell :val="this.hitMap[i - 1][j - 1]" :loc="[i - 1, j - 1]" board="oppBoard"/> -->
       </div>
     </div>
   </div>

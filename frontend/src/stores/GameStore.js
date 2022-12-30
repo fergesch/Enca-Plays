@@ -1,8 +1,5 @@
 import { defineStore } from "pinia";
 import { fill_gaps, locations_equal } from "@/utils/Utils"
-// import { fiveLetter, toggleMatch, checkWord } from "../utils/Utils";
-// import Api from "../utils/Api.vue";
-// import { ref, computed } from "vue";
 
 export const useGameStore = defineStore("GameStore", {
   state: () => {
@@ -25,7 +22,6 @@ export const useGameStore = defineStore("GameStore", {
       shipEnd: [],
 
       shipPositions: [
-                // check for overlaps somewhere
         {
           ship: "Carrier",
           locs: [],
@@ -88,7 +84,8 @@ export const useGameStore = defineStore("GameStore", {
         [a, b - shipLength],
       ];
       endOptions = []
-      // add check for collisions
+      
+      // check for collisions
       occupied_locations = []
       state.shipPositions.forEach(function (ship) {
         ship.locs.forEach(function (loc) {
@@ -222,29 +219,5 @@ export const useGameStore = defineStore("GameStore", {
       });
     },
 
-    // async addWord() {
-    //   let word = fiveLetter(this.currentWord.slice());
-    //   if (word) {
-    //     let check = await checkWord(word);
-    //     if (check) {
-    //       let letterList = word.split("");
-
-    //       const letterMap = {};
-    //       letterList.forEach(function (item, index) {
-    //         if (!(item in letterMap)) {
-    //           letterMap[item] = [];
-    //         }
-    //         letterMap[item].push([index, -1]);
-    //       });
-
-    //       this.words.push(letterMap);
-    //       this.currentWord = ""; //set back to empty for next input
-    //     } else {
-    //       this.showModal = true;
-    //     }
-    //   } else {
-    //     this.showModal = true;
-    //   }
-    // },
   },
 });

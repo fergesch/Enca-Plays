@@ -1,9 +1,3 @@
-<!-- NEXT STEPS: Place ships
-  Will need to store ships & sizes somewhere
-FLOW: go one ship at a time. Click starting cell, highlight endpoints. Click endpoint
-Hit confirm button before moving to next ship
-Once all ships placed use submit_ships feature -->
-
 <script>
 import GameBoard from "@/components/GameBoard.vue";
 import { useGameStore } from "@/stores/GameStore";
