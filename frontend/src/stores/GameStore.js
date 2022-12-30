@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { fill_gaps, locations_equal } from "@/utils/Utils"
 // import { fiveLetter, toggleMatch, checkWord } from "../utils/Utils";
 // import Api from "../utils/Api.vue";
 // import { ref, computed } from "vue";
@@ -56,16 +57,19 @@ export const useGameStore = defineStore("GameStore", {
         [8, 4, false],
       ],
       oppMissiles: [
-        [9, 9, true],
-        [5, 6, false],
-        [2, 1, false],
+        // [9, 9, true],
+        // [5, 6, false],
+        // [2, 1, false],
       ],
     };
   },
 
   getters: {
     eligEnds(state) {
-      var shipOptions, currShip, shipLength, a, b, endOptions;
+      if (!state.gameSubPhase.includes("End")) {
+        return []
+      }
+      var shipOptions, currShip, shipLength, a, b, possOptions, endOptions, occupied_locations;
       shipOptions = {
         Carrier: 5,
         Battleship: 4,
@@ -77,14 +81,43 @@ export const useGameStore = defineStore("GameStore", {
       shipLength = shipOptions[currShip] - 1;
       a = state.shipStart[0];
       b = state.shipStart[1];
-      endOptions = [
+      possOptions = [
         [a + shipLength, b],
         [a - shipLength, b],
         [a, b + shipLength],
         [a, b - shipLength],
       ];
+      endOptions = []
       // add check for collisions
+      occupied_locations = []
+      state.shipPositions.forEach(function (ship) {
+        ship.locs.forEach(function (loc) {
+          occupied_locations.push(loc)
+        })
+      })
+      possOptions.forEach(function (loc) {
+        let full_length = fill_gaps([a, b], loc)
+        let keep_value = true
+        full_length.forEach(function (ship_loc) {
+        let index = occupied_locations.findIndex(function (elem) {
+            return locations_equal(elem, ship_loc)
+          })
+          if (index >= 0) {
+            keep_value = false
+          }
+        })
+        if (keep_value) {
+          endOptions.push(loc)
+        }
+      })
       return endOptions;
+    },
+
+    tempShip(state) {
+      if (state.shipStart.length > 0 && state.shipEnd.length > 0) {
+        return fill_gaps(state.shipStart, state.shipEnd)
+      }
+      return []
     },
 
     myBoard(state) {
@@ -119,6 +152,12 @@ export const useGameStore = defineStore("GameStore", {
               matrix[i][j] = missile[2] ? 2 : 3;
             }
           });
+          // set temp ship
+          this.tempShip.forEach(function (loc) {
+            if (loc[0] == i && loc[1] == j) {
+              matrix[i][j] = 4
+            }
+          })
         }
       }
       console.log(matrix);

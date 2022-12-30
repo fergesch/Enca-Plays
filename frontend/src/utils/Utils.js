@@ -27,3 +27,8 @@ export function fill_gaps(start, end) {
   }
   return locs;
 }
+
+
+export function locations_equal(loc_a, loc_b) {
+  return loc_a[0] == loc_b[0] && loc_a[1] == loc_b[1]
+}

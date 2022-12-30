@@ -17,9 +17,6 @@ export default {
       let ship_locs = fill_gaps(this.gameStore.shipStart, this.gameStore.shipEnd)
       let ships = [...this.gameStore.shipPositions]
       ships.forEach(function (ship_value, index) {
-        console.log(index)
-        console.log(ship_value)
-        console.log(ships)
         if (ship_value.ship == ship) {
           ships[index]["locs"] = ship_locs
         }
