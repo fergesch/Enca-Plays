@@ -1,7 +1,7 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
 import gameCell from "./gameCell.vue";
-import {next_ship, fill_gaps} from "@/utils/Utils";
+import { next_ship, fill_gaps } from "@/utils/Utils";
 
 export default {
   setup() {
@@ -11,17 +11,20 @@ export default {
   name: "Board",
   methods: {
     endSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase
-      let ship = curr_phase.split(" ")[0]
+      let curr_phase = this.gameStore.gameSubPhase;
+      let ship = curr_phase.split(" ")[0];
       // assign values in store
-      let ship_locs = fill_gaps(this.gameStore.shipStart, this.gameStore.shipEnd)
-      let ships = [...this.gameStore.shipPositions]
+      let ship_locs = fill_gaps(
+        this.gameStore.shipStart,
+        this.gameStore.shipEnd
+      );
+      let ships = [...this.gameStore.shipPositions];
       ships.forEach(function (ship_value, index) {
         if (ship_value.ship == ship) {
-          ships[index]["locs"] = ship_locs
+          ships[index]["locs"] = ship_locs;
         }
-      })
-      this.gameStore.shipPositions = ships
+      });
+      this.gameStore.shipPositions = ships;
 
       // moving to next phase and clearing out state
       this.gameStore.shipEnd = [];
@@ -30,11 +33,11 @@ export default {
       this.gameStore.gameSubPhase = next_sub_phase;
     },
     resetSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase
-      let ship = curr_phase.split(" ")[0]
+      let curr_phase = this.gameStore.gameSubPhase;
+      let ship = curr_phase.split(" ")[0];
       this.gameStore.shipEnd = [];
       this.gameStore.shipStart = [];
-      this.gameStore.gameSubPhase = ship + " Start"     
+      this.gameStore.gameSubPhase = ship + " Start";
     },
   },
 
@@ -76,7 +79,7 @@ export default {
     Confirm Ship
   </button>
   <button
-    v-if="this.gameStore.gameSubPhase.includes('Confirm')"
+    v-if="this.gameStore.gamePhase.includes('Setup')"
     @click="resetSubPhase"
   >
     Reset Current Ship

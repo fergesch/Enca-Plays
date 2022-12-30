@@ -14,13 +14,13 @@ export default {
       // condition for gamePhase setup and board == myBoard
       if (
         this.board == "myBoard" &&
-        this.gameStore.gamePhase == "setup" &&
+        this.gameStore.gamePhase == "Setup" &&
         this.gameStore.gameSubPhase.includes("Start")
       ) {
         this.gameStore.start_ship_event(this.loc[0], this.loc[1]);
       } else if (
         this.board == "myBoard" &&
-        this.gameStore.gamePhase == "setup" &&
+        this.gameStore.gamePhase == "Setup" &&
         this.gameStore.gameSubPhase.includes("End")
       ) {
         this.gameStore.end_ship_event(this.loc[0], this.loc[1]);

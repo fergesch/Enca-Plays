@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { fill_gaps, locations_equal } from "@/utils/Utils"
+import { fill_gaps, locations_equal, check_collisions } from "@/utils/Utils";
 
 export const useGameStore = defineStore("GameStore", {
   state: () => {
@@ -9,7 +9,7 @@ export const useGameStore = defineStore("GameStore", {
       room: "",
       showModal: false,
       modalMessage: "TEST",
-      gamePhase: "setup",
+      gamePhase: "Setup",
       gameSubPhase: "Carrier Start",
       // values of setup ships, playerX turn, win, lose (playerX turn will allow same event to be sent and can validate on username)
       // can make more specific for setup phase to say ship X start, ship X end, confirm (do modal)
@@ -61,11 +61,28 @@ export const useGameStore = defineStore("GameStore", {
   },
 
   getters: {
+    occupiedLocations(state) {
+      let occupied_locations = [];
+      state.shipPositions.forEach(function (ship) {
+        ship.locs.forEach(function (loc) {
+          occupied_locations.push(loc);
+        });
+      });
+      return occupied_locations
+    },
+
     eligEnds(state) {
       if (!state.gameSubPhase.includes("End")) {
-        return []
+        return [];
       }
-      var shipOptions, currShip, shipLength, a, b, possOptions, endOptions, occupied_locations;
+      var shipOptions,
+        currShip,
+        shipLength,
+        a,
+        b,
+        possOptions,
+        endOptions,
+        occupied_locations;
       shipOptions = {
         Carrier: 5,
         Battleship: 4,
@@ -83,38 +100,31 @@ export const useGameStore = defineStore("GameStore", {
         [a, b + shipLength],
         [a, b - shipLength],
       ];
-      endOptions = []
-      
+      endOptions = [];
+
       // check for collisions
-      occupied_locations = []
-      state.shipPositions.forEach(function (ship) {
-        ship.locs.forEach(function (loc) {
-          occupied_locations.push(loc)
-        })
-      })
+      occupied_locations = this.occupiedLocations
       possOptions.forEach(function (loc) {
-        let full_length = fill_gaps([a, b], loc)
-        let keep_value = true
+        let full_length = fill_gaps([a, b], loc);
+        let keep_value = true;
         full_length.forEach(function (ship_loc) {
-        let index = occupied_locations.findIndex(function (elem) {
-            return locations_equal(elem, ship_loc)
-          })
+          let index = check_collisions(occupied_locations, ship_loc);
           if (index >= 0) {
-            keep_value = false
+            keep_value = false;
           }
-        })
+        });
         if (keep_value) {
-          endOptions.push(loc)
+          endOptions.push(loc);
         }
-      })
+      });
       return endOptions;
     },
 
     tempShip(state) {
       if (state.shipStart.length > 0 && state.shipEnd.length > 0) {
-        return fill_gaps(state.shipStart, state.shipEnd)
+        return fill_gaps(state.shipStart, state.shipEnd);
       }
-      return []
+      return [];
     },
 
     myBoard(state) {
@@ -152,9 +162,9 @@ export const useGameStore = defineStore("GameStore", {
           // set temp ship
           this.tempShip.forEach(function (loc) {
             if (loc[0] == i && loc[1] == j) {
-              matrix[i][j] = 4
+              matrix[i][j] = 4;
             }
-          })
+          });
         }
       }
       console.log(matrix);
@@ -195,8 +205,13 @@ export const useGameStore = defineStore("GameStore", {
     },
 
     start_ship_event(i, j) {
-      this.shipStart = [i, j];
-      this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " End";
+      // check that i,j isn't already in shipLocs
+      let index = check_collisions(this.occupiedLocations, [i,j])
+      if (index == -1) {
+        this.shipStart = [i, j];
+        this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " End";
+      }
+      
     },
     end_ship_event(i, j) {
       // if (this.eligEnds.includes([i, j])) { // this doesnt work because [x,y] !== [x,y]
@@ -218,6 +233,5 @@ export const useGameStore = defineStore("GameStore", {
         shipPositions: this.shipPositions,
       });
     },
-
   },
 });

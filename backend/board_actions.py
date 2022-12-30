@@ -23,7 +23,7 @@ def place_player_ships(username, room_id, ship_locations):
 
 def initialize_game(username, room_id):
 	game_state = initialize_player_state(username, PLAYER_ONE)
-	game_state["game_phase"] = "setup"
+	game_state["game_phase"] = "Setup"
 	GAME_STATES[room_id] = game_state
 
 
