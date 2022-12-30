@@ -30,7 +30,13 @@ export default {
       let next_sub_phase = next_ship(curr_phase);
       this.gameStore.gameSubPhase = next_sub_phase;
     },
-    resetSubPhase() {},
+    resetSubPhase() {
+      let curr_phase = this.gameStore.gameSubPhase
+      let ship = curr_phase.split(" ")[0]
+      this.gameStore.shipEnd = [];
+      this.gameStore.shipStart = [];
+      this.gameStore.gameSubPhase = ship + " Start"     
+    },
   },
 
   components: {
