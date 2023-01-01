@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { fill_gaps, locations_equal, check_collisions } from "@/utils/Utils";
+import { fill_gaps, get_ship, check_collisions, get_ship_info} from "@/utils/Utils";
 
 export const useGameStore = defineStore("GameStore", {
   state: () => {
@@ -72,27 +72,27 @@ export const useGameStore = defineStore("GameStore", {
       return occupied_locations
     },
 
+    shipText(state) {
+      let currShip = get_ship(state.gameSubPhase);
+      if (currShip) {
+        let shipLength = get_ship_info(currShip)["size"];
+        return currShip + " (" + shipLength + ")";
+      }
+    },
+
     eligEnds(state) {
       if (!state.gameSubPhase.includes("End")) {
         return [];
       }
-      var shipOptions,
-        currShip,
+      var currShip,
         shipLength,
         a,
         b,
         possOptions,
         endOptions,
         occupied_locations;
-      shipOptions = {
-        Carrier: 5,
-        Battleship: 4,
-        Submarine: 3,
-        Cruiser: 3,
-        Destroyer: 2,
-      };
-      currShip = state.gameSubPhase.split(" ")[0];
-      shipLength = shipOptions[currShip] - 1;
+      currShip = get_ship(state.gameSubPhase);
+      shipLength = get_ship_info(currShip)["size"] - 1;
       a = state.shipStart[0];
       b = state.shipStart[1];
       possOptions = [
@@ -210,7 +210,7 @@ export const useGameStore = defineStore("GameStore", {
       let index = check_collisions(this.occupiedLocations, [i,j])
       if (index == -1) {
         this.shipStart = [i, j];
-        this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " End";
+        this.gameSubPhase = get_ship(this.gameSubPhase) + " End";
       }
       
     },
@@ -221,7 +221,7 @@ export const useGameStore = defineStore("GameStore", {
       var c = eligEndsStr.indexOf(locStr);
       if (c != -1) {
         this.shipEnd = [i, j];
-        this.gameSubPhase = this.gameSubPhase.split(" ")[0] + " Confirm";
+        this.gameSubPhase = get_ship(this.gameSubPhase) + " Confirm";
       } else {
         console.log("Bad endpoint");
       }

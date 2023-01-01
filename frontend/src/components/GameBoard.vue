@@ -1,7 +1,7 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
 import gameCell from "./gameCell.vue";
-import { next_ship, fill_gaps } from "@/utils/Utils";
+import { next_ship, fill_gaps, get_ship } from "@/utils/Utils";
 
 export default {
   setup() {
@@ -12,7 +12,7 @@ export default {
   methods: {
     endSubPhase() {
       let curr_phase = this.gameStore.gameSubPhase;
-      let ship = curr_phase.split(" ")[0];
+      let ship = get_ship(curr_phase);
       // assign values in store
       let ship_locs = fill_gaps(
         this.gameStore.shipStart,
@@ -34,7 +34,7 @@ export default {
     },
     resetSubPhase() {
       let curr_phase = this.gameStore.gameSubPhase;
-      let ship = curr_phase.split(" ")[0];
+      let ship = get_ship(curr_phase);
       this.gameStore.shipEnd = [];
       this.gameStore.shipStart = [];
       this.gameStore.gameSubPhase = ship + " Start";

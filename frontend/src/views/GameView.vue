@@ -20,6 +20,7 @@ export default {
       <q-chip icon="person" :label="gameStore.username" />
       <q-chip icon="room" :label="gameStore.room" />
     </div>
+    <div v-if=gameStore.shipText>Set ships {{gameStore.shipText}}</div>
 
     <GameBoard />
   </div>

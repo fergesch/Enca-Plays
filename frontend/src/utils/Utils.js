@@ -1,12 +1,29 @@
-const SHIPS = ["Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"];
+const SHIPS = [{ship: "Carrier", "size": 5},
+               {ship: "Battleship", "size": 4}, 
+               {ship: "Submarine", "size": 3}, 
+               {ship: "Cruiser" ,"size": 3}, 
+               {ship: "Destroyer", "size": 2}]
+
+export function get_ship(sub_phase) {
+  const ship = sub_phase.split(" ")[0];
+  if (get_ship_info(ship))
+    return ship
+  else 
+    console.log("Undefined ship")
+}
+
+export function get_ship_info(ship_name) {
+  const found = SHIPS.find(element => element['ship'] === ship_name);
+  return found
+}
 
 export function next_ship(sub_phase) {
-  let ship_name = sub_phase.split(" ")[0];
+  let ship_name = get_ship(sub_phase);
   let index = SHIPS.findIndex(function (element) {
-    return ship_name == element;
+    return ship_name == element['ship'];
   });
   let next_val = index + 1;
-  return next_val < SHIPS.length ? SHIPS[next_val] + " Start" : "Submit Ships";
+  return next_val < SHIPS.length ? SHIPS[next_val]["ship"] + " Start" : "Submit Ships";
 }
 
 export function fill_gaps(start, end) {
