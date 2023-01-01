@@ -50,7 +50,7 @@ export const useGameStore = defineStore("GameStore", {
         },
       ],
       myMissiles: [
-        [1, 1, true], // this should be 0 indexed
+        [1, 1, true],
         [8, 4, false],
       ],
       oppMissiles: [
@@ -228,16 +228,16 @@ export const useGameStore = defineStore("GameStore", {
     },
 
     submit_ships() {
-      this.socketObj.emit("submit_ships", {
-        username: this.username,
-        room: this.room,
-        shipPositions: this.shipPositions,
-      });
       this.gamePhase = "Waiting"
       this.gameSubPhase = ""
       this.showModal = true
       this.modalMessage = "Waiting for other player"
       this.modalBlocking = true
+      this.socketObj.emit("submit_ships", {
+        username: this.username,
+        room: this.room,
+        shipPositions: this.shipPositions,
+      });
     },
   },
 });
