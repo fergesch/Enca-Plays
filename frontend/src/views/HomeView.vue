@@ -7,10 +7,7 @@ export default {
     return { gameStore };
   },
 
-  name: "Board",
-  components: {
-    modalPopup,
-  },
+  name: "Home",
 };
 </script>
 
