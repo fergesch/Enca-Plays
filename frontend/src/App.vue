@@ -32,6 +32,12 @@ export default {
       this.$router.push("/game");
     });
 
+    this.gameStore.socketObj.on("players_ready", (data) => {
+      console.log(data)
+      this.gameStore.showModal = false;
+      this.gameStore.gamePhase = data["game_phase"]
+    })
+
     this.gameStore.socketObj.on("modal_event", (data) => {
       this.gameStore.modalMessage = data["message"];
       this.gameStore.showModal = true;
