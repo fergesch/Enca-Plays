@@ -4,10 +4,16 @@ import { RouterLink, RouterView } from "vue-router";
 import { useGameStore } from "@/stores/GameStore";
 import { io } from "socket.io-client";
 
+import modalPopup from "@/components/modalPopup.vue"
+
 export default {
   setup() {
     const gameStore = useGameStore();
     return { gameStore };
+  },
+
+  components: {
+    modalPopup,
   },
 
   mounted() {
@@ -56,6 +62,12 @@ export default {
   </header>
 
   <RouterView />
+  <modalPopup
+      :show="gameStore.showModal"
+      :message="gameStore.modalMessage"
+      :blocking="gameStore.modalBlocking"
+      @close="gameStore.showModal = false"
+    ></modalPopup>
 </template>
 
 <style scoped>

@@ -9,6 +9,7 @@ export const useGameStore = defineStore("GameStore", {
       room: "",
       showModal: false,
       modalMessage: "TEST",
+      modalBlocking: false,
       gamePhase: "Setup",
       gameSubPhase: "Carrier Start",
       // values of setup ships, playerX turn, win, lose (playerX turn will allow same event to be sent and can validate on username)
@@ -232,6 +233,11 @@ export const useGameStore = defineStore("GameStore", {
         room: this.room,
         shipPositions: this.shipPositions,
       });
+      this.gamePhase = "Waiting"
+      this.gameSubPhase = ""
+      this.showModal = true
+      this.modalMessage = "Waiting for other player"
+      this.modalBlocking = true
     },
   },
 });

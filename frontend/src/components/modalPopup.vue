@@ -3,6 +3,7 @@ export default {
   props: {
     show: Boolean,
     message: String,
+    blocking: Boolean,
   },
 };
 </script>
@@ -20,7 +21,7 @@ export default {
             <slot name="body">{{ message }}</slot>
           </div>
 
-          <div class="modal-footer">
+          <div v-if="!blocking" class="modal-footer">
             <slot name="footer">
               <!-- Room does not exist. Enter another room or create new game. -->
               <button class="modal-default-button" @click="$emit('close')">
