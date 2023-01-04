@@ -1,100 +1,22 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
-import gameCell from "./gameCell.vue";
-import { next_ship, fill_gaps, get_ship } from "@/utils/Utils";
+import GameRow from "./GameRow.vue";
 
 export default {
   setup() {
     const gameStore = useGameStore();
     return { gameStore };
   },
-  name: "Board",
-  methods: {
-    endSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase;
-      let ship = get_ship(curr_phase);
-      // assign values in store
-      let ship_locs = fill_gaps(
-        this.gameStore.shipStart,
-        this.gameStore.shipEnd
-      );
-      let ships = [...this.gameStore.shipPositions];
-      ships.forEach(function (ship_value, index) {
-        if (ship_value.ship == ship) {
-          ships[index]["locs"] = ship_locs;
-        }
-      });
-      this.gameStore.shipPositions = ships;
-
-      // moving to next phase and clearing out state
-      this.gameStore.shipEnd = [];
-      this.gameStore.shipStart = [];
-      let next_sub_phase = next_ship(curr_phase);
-      this.gameStore.gameSubPhase = next_sub_phase;
-    },
-    resetSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase;
-      let ship = get_ship(curr_phase);
-      this.gameStore.shipEnd = [];
-      this.gameStore.shipStart = [];
-      this.gameStore.gameSubPhase = ship + " Start";
-    },
-  },
+  // name: "Board",
+  props: ["board"],
 
   components: {
-    gameCell,
+    GameRow,
   },
 };
 </script>
 
 <template>
-  <div class="oppBoard">
-    <div class="row" v-for="i in 10">
-      <div v-for="j in 10">
-        <gameCell
-          :val="this.gameStore.oppBoard[i - 1][j - 1]"
-          :loc="[i - 1, j - 1]"
-          board="oppBoard"
-        />
-      </div>
-    </div>
-  </div>
-  <br />
-  <div class="myBoard">
-    <div class="row" v-for="i in 10">
-      <div v-for="j in 10">
-        <gameCell
-          :val="this.gameStore.myBoard[i - 1][j - 1]"
-          :loc="[i - 1, j - 1]"
-          board="myBoard"
-        />
-      </div>
-    </div>
-  </div>
-  <!-- make a button that shows up in the SHIP Confirm subphase that sets shipPosition and moves to next ship -->
-  <button
-    v-if="this.gameStore.gameSubPhase.includes('Confirm')"
-    @click="endSubPhase"
-  >
-    Confirm Ship
-  </button>
-  <button
-    v-if="this.gameStore.gamePhase.includes('Setup')"
-    @click="resetSubPhase"
-  >
-    Reset Current Ship
-  </button>
-  <button
-    v-if="this.gameStore.gameSubPhase == 'Submit Ships'"
-    @click="this.gameStore.submit_ships()"
-  >
-    Submit Ships
-  </button>
+  <!-- make header for letters ABC... -->
+  <GameRow v-for="i in 10" :rowNum="i - 1" :board="board" />
 </template>
-
-<style>
-.cell {
-  width: 30px;
-  height: 30px;
-}
-</style>

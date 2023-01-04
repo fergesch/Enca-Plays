@@ -1,6 +1,7 @@
 <script>
 import GameBoard from "@/components/GameBoard.vue";
 import { useGameStore } from "@/stores/GameStore";
+import { next_ship, fill_gaps, get_ship } from "@/utils/Utils";
 
 export default {
   setup() {
@@ -9,6 +10,37 @@ export default {
   },
   components: {
     GameBoard,
+  },
+  methods: {
+    endSubPhase() {
+      let curr_phase = this.gameStore.gameSubPhase;
+      let ship = get_ship(curr_phase);
+      // assign values in store
+      let ship_locs = fill_gaps(
+        this.gameStore.shipStart,
+        this.gameStore.shipEnd
+      );
+      let ships = [...this.gameStore.shipPositions];
+      ships.forEach(function (ship_value, index) {
+        if (ship_value.ship == ship) {
+          ships[index]["locs"] = ship_locs;
+        }
+      });
+      this.gameStore.shipPositions = ships;
+
+      // moving to next phase and clearing out state
+      this.gameStore.shipEnd = [];
+      this.gameStore.shipStart = [];
+      let next_sub_phase = next_ship(curr_phase);
+      this.gameStore.gameSubPhase = next_sub_phase;
+    },
+    resetSubPhase() {
+      let curr_phase = this.gameStore.gameSubPhase;
+      let ship = get_ship(curr_phase);
+      this.gameStore.shipEnd = [];
+      this.gameStore.shipStart = [];
+      this.gameStore.gameSubPhase = ship + " Start";
+    },
   },
 };
 </script>
@@ -20,21 +52,31 @@ export default {
       <q-chip icon="person" :label="gameStore.username" />
       <q-chip icon="room" :label="gameStore.room" />
     </div>
-    <div v-if=gameStore.shipText>Set ships {{gameStore.shipText}}</div>
+    <div v-if="gameStore.shipText">Set ships {{ gameStore.shipText }}</div>
 
-    <GameBoard />
+    <GameBoard board="oppBoard" />
+    <br />
+    <GameBoard board="myBoard" />
+
+    <button
+      v-if="this.gameStore.gameSubPhase.includes('Confirm')"
+      @click="endSubPhase"
+    >
+      Confirm Ship
+    </button>
+    <button
+      v-if="this.gameStore.gamePhase.includes('Setup')"
+      @click="resetSubPhase"
+    >
+      Reset Current Ship
+    </button>
+    <button
+      v-if="this.gameStore.gameSubPhase == 'Submit Ships'"
+      @click="this.gameStore.submit_ships()"
+    >
+      Submit Ships
+    </button>
   </div>
 </template>
 
-<style>
-/* .player-class {
-
-} */
-/* @media (min-width: 1024px) {
-  .game {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
-</style>
+<style></style>
