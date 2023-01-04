@@ -219,10 +219,7 @@ export const useGameStore = defineStore("GameStore", {
       }
     },
     end_ship_event(i, j) {
-      // if (this.eligEnds.includes([i, j])) { // this doesnt work because [x,y] !== [x,y]
-      var eligEndsStr = JSON.stringify(this.eligEnds);
-      var locStr = JSON.stringify([i, j]);
-      var c = eligEndsStr.indexOf(locStr);
+      let c = check_collisions(this.eligEnds, [i,j])
       if (c != -1) {
         this.shipEnd = [i, j];
         this.gameSubPhase = get_ship(this.gameSubPhase) + " Confirm";

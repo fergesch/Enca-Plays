@@ -51,12 +51,15 @@ export function fill_gaps(start, end) {
   return locs;
 }
 
-export function locations_equal(loc_a, loc_b) {
-  return loc_a[0] == loc_b[0] && loc_a[1] == loc_b[1];
-}
-
-export function check_collisions(position_list, loc) {
-  return position_list.findIndex(function (elem) {
-    return locations_equal(elem, loc);
-  });
+export function check_collisions(haystack, needle) {
+  var i, j, current;
+  for (i = 0; i < haystack.length; ++i) {
+    if (needle.length === haystack[i].length) {
+      current = haystack[i];
+      for (j = 0; j < needle.length && needle[j] === current[j]; ++j);
+      if (j === needle.length)
+        return i;
+    }
+  }
+  return -1;
 }
