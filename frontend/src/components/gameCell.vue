@@ -1,5 +1,6 @@
 <script>
 import { useGameStore } from "@/stores/GameStore";
+import { LETTERS } from "@/utils/Utils";
 
 export default {
   setup() {
@@ -45,51 +46,52 @@ export default {
         4: "eligEnd",
         5: "shipStart",
       },
+      letters: LETTERS,
     };
   },
 };
 </script>
 
 <template>
-  <!-- <button :class="val" @click="this.gameStore.button_click_event(i,j)">{{ loc[0].toString() + "|" + loc[1].toString() }}</button> -->
-  <button :class="colorMap[val]" @click="clickLog">
-    {{ loc[0].toString() + "|" + loc[1].toString() }}
+  <button :class="colorMap[val]" @click="clickLog" class="boardCell">
+    <!-- {{ loc[0].toString() + "|" + loc[1].toString() }} -->
+    {{ letters[loc[1] + 1].toString() + (loc[0] + 1).toString() }}
   </button>
 </template>
 
 <style scoped>
 .hit {
   background-color: red;
-  color: antiquewhite;
+  color: red;
 }
 
 .miss {
   background-color: white;
-  color: darkgrey;
+  color: white;
 }
 
 .ocean {
   background-color: blue;
-  color: darkgrey;
+  color: blue;
 }
 
 .ship {
   background-color: grey;
-  color: darkgrey;
+  color: grey;
 }
 
 .eligEnd {
   background-color: yellow;
-  color: black;
+  color: yellow;
 }
 
 .shipStart {
   background-color: green;
-  color: grey;
+  color: green;
 }
 
-button {
-  width: 30px;
-  height: 30px;
-}
+/* button {
+  width: 35px;
+  height: 35px;
+} */
 </style>

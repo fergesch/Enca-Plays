@@ -6,6 +6,8 @@ const SHIPS = [
   { ship: "Destroyer", size: 2 },
 ];
 
+export const LETTERS = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
 export function get_ship(sub_phase) {
   const ship = sub_phase.split(" ")[0];
   if (get_ship_info(ship)) return ship;

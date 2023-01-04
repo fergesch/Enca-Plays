@@ -15,7 +15,7 @@ export default {
 </script>
 
 <template>
-  <div class="rowInd">{{ rowNum + 1 }}</div>
+  <div class="boardCell">{{ rowNum + 1 }}</div>
   <GameCell
     v-for="j in 10"
     :val="this.gameStore[board][rowNum][j - 1]"
@@ -25,11 +25,4 @@ export default {
   <br />
 </template>
 
-<style scoped>
-.rowInd {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  display: inline-block;
-}
-</style>
+<style scoped></style>
