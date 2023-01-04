@@ -7,7 +7,7 @@ export default {
     return { gameStore };
   },
 
-  name: "Home",
+  // name: "Home",
 };
 </script>
 

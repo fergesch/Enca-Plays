@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { useGameStore } from "@/stores/GameStore";
 import { io } from "socket.io-client";
 
-import modalPopup from "@/components/modalPopup.vue"
+import modalPopup from "@/components/modalPopup.vue";
 
 export default {
   setup() {
@@ -14,6 +14,8 @@ export default {
 
   components: {
     modalPopup,
+    RouterLink,
+    RouterView,
   },
 
   mounted() {
@@ -33,10 +35,10 @@ export default {
     });
 
     this.gameStore.socketObj.on("players_ready", (data) => {
-      console.log(data)
+      console.log(data);
       this.gameStore.showModal = false;
-      this.gameStore.gamePhase = data["game_phase"]
-    })
+      this.gameStore.gamePhase = data["game_phase"];
+    });
 
     this.gameStore.socketObj.on("modal_event", (data) => {
       this.gameStore.modalMessage = data["message"];
@@ -69,11 +71,11 @@ export default {
 
   <RouterView />
   <modalPopup
-      :show="gameStore.showModal"
-      :message="gameStore.modalMessage"
-      :blocking="gameStore.modalBlocking"
-      @close="gameStore.showModal = false"
-    ></modalPopup>
+    :show="gameStore.showModal"
+    :message="gameStore.modalMessage"
+    :blocking="gameStore.modalBlocking"
+    @close="gameStore.showModal = false"
+  ></modalPopup>
 </template>
 
 <style scoped>

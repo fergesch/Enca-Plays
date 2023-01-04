@@ -1,5 +1,10 @@
 import { defineStore } from "pinia";
-import { fill_gaps, get_ship, check_collisions, get_ship_info} from "@/utils/Utils";
+import {
+  fill_gaps,
+  get_ship,
+  check_collisions,
+  get_ship_info,
+} from "@/utils/Utils";
 
 export const useGameStore = defineStore("GameStore", {
   state: () => {
@@ -69,7 +74,7 @@ export const useGameStore = defineStore("GameStore", {
           occupied_locations.push(loc);
         });
       });
-      return occupied_locations
+      return occupied_locations;
     },
 
     shipText(state) {
@@ -104,7 +109,7 @@ export const useGameStore = defineStore("GameStore", {
       endOptions = [];
 
       // check for collisions
-      occupied_locations = this.occupiedLocations
+      occupied_locations = this.occupiedLocations;
       possOptions.forEach(function (loc) {
         let full_length = fill_gaps([a, b], loc);
         let keep_value = true;
@@ -207,12 +212,11 @@ export const useGameStore = defineStore("GameStore", {
 
     start_ship_event(i, j) {
       // check that i,j isn't already in shipLocs
-      let index = check_collisions(this.occupiedLocations, [i,j])
+      let index = check_collisions(this.occupiedLocations, [i, j]);
       if (index == -1) {
         this.shipStart = [i, j];
         this.gameSubPhase = get_ship(this.gameSubPhase) + " End";
       }
-      
     },
     end_ship_event(i, j) {
       // if (this.eligEnds.includes([i, j])) { // this doesnt work because [x,y] !== [x,y]
@@ -228,11 +232,11 @@ export const useGameStore = defineStore("GameStore", {
     },
 
     submit_ships() {
-      this.gamePhase = "Waiting"
-      this.gameSubPhase = ""
-      this.showModal = true
-      this.modalMessage = "Waiting for other player"
-      this.modalBlocking = true
+      this.gamePhase = "Waiting";
+      this.gameSubPhase = "";
+      this.showModal = true;
+      this.modalMessage = "Waiting for other player";
+      this.modalBlocking = true;
       this.socketObj.emit("submit_ships", {
         username: this.username,
         room: this.room,
