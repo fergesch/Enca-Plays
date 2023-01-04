@@ -61,16 +61,29 @@ def submit_ships(data):
     room = data['room']
     board_actions.place_player_ships(username, room, ship_positions)
     game_state = board_actions.GAME_STATES[room]
-    player_keys = [i for i in game_state.keys() if i != 'game_phase']
-    if len(player_keys) == 2:
-        if (game_state[player_keys[0]]["ship_positions"] is not None) and (game_state[player_keys[1]]["ship_positions"] is not None):
-            emit("players_ready", {"game_phase": f"{player_keys[0]} turn"}, to=room)
+    player_keys = list(game_state["players"].keys())
+    ready_count = [k for k in player_keys if game_state["players"][k]["ship_positions"] is not None]
+    if len(ready_count) == 2:
+        event_data = board_actions.update_game_phase(room, "Playing", player_keys[0])
+        emit("players_ready", event_data, to=room)
 
 
 @socketio.on('grid_click')
 def handle_my_custom_event(json):
     LOGGER.info("grid click", json)
+
+@socketio.on('fire_missile')
+def fire_missile(data):
+    username = data["username"]
+    room = data["room"]
+    loc = data["loc"]
+    missile_result = board_actions.check_missile(username, room, loc)
+    loc.append(missile_result)
     
+    # pop value from ship positions if it hits
+    # also check if game over
+    emit('return_missile', {"username": username, "loc": loc}, to=room)
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     endSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase;
+      let curr_phase = this.gameStore.phase["secondary"];
       let ship = get_ship(curr_phase);
       // assign values in store
       let ship_locs = fill_gaps(
@@ -32,14 +32,14 @@ export default {
       this.gameStore.shipEnd = [];
       this.gameStore.shipStart = [];
       let next_sub_phase = next_ship(curr_phase);
-      this.gameStore.gameSubPhase = next_sub_phase;
+      this.gameStore.phase["secondary"] = next_sub_phase;
     },
     resetSubPhase() {
-      let curr_phase = this.gameStore.gameSubPhase;
+      let curr_phase = this.gameStore.phase["secondary"];
       let ship = get_ship(curr_phase);
       this.gameStore.shipEnd = [];
       this.gameStore.shipStart = [];
-      this.gameStore.gameSubPhase = ship + " Start";
+      this.gameStore.phase["secondary"] = ship + " Start";
     },
   },
 };
@@ -59,23 +59,24 @@ export default {
     <GameBoard board="myBoard" />
 
     <button
-      v-if="this.gameStore.gameSubPhase.includes('Confirm')"
+      v-if="this.gameStore.phase['secondary'].includes('Confirm')"
       @click="endSubPhase"
     >
       Confirm Ship
     </button>
     <button
-      v-if="this.gameStore.gamePhase.includes('Setup')"
+      v-if="this.gameStore.phase['secondary'].includes('End') || this.gameStore.phase['secondary'].includes('Confirm')"
       @click="resetSubPhase"
     >
       Reset Current Ship
     </button>
     <button
-      v-if="this.gameStore.gameSubPhase == 'Submit Ships'"
+      v-if="this.gameStore.phase['secondary'] == 'Submit Ships'"
       @click="this.gameStore.submit_ships()"
     >
       Submit Ships
     </button>
+    <!-- Add button or buttons to reset ship if you dont want to submit -->
   </div>
 </template>
 

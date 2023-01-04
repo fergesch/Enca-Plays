@@ -10,29 +10,31 @@ export default {
   props: ["val", "loc", "board"],
   methods: {
     clickLog() {
-      // need to handle different phases of the game using this.gameStore.gamePhase which will
+      // need to handle different phases of the game using this.gameStore.phase["primary"] which will
       console.log(this.loc, this.val, this.board);
-      // condition for gamePhase setup and board == myBoard
+      // condition for phase["primary"] setup and board == myBoard
       if (
         this.board == "myBoard" &&
-        this.gameStore.gamePhase == "Setup" &&
-        this.gameStore.gameSubPhase.includes("Start")
+        this.gameStore.phase["primary"] == "Setup" &&
+        this.gameStore.phase["secondary"].includes("Start")
       ) {
         this.gameStore.start_ship_event(this.loc[0], this.loc[1]);
       } else if (
         this.board == "myBoard" &&
-        this.gameStore.gamePhase == "Setup" &&
-        this.gameStore.gameSubPhase.includes("End")
+        this.gameStore.phase["primary"] == "Setup" &&
+        this.gameStore.phase["secondary"].includes("End")
       ) {
         this.gameStore.end_ship_event(this.loc[0], this.loc[1]);
       }
 
-      // condition for gamePhase
+      // condition for phase["primary"]
       if (
         this.board == "oppBoard" &&
-        this.gameStore.gamePhase == this.gameStore.username
+        this.gameStore.phase["primary"] == "Playing" &&
+        this.gameStore.phase["secondary"] == this.gameStore.username
       ) {
-        this.gameStore.button_click_event(this.loc[0], this.loc[1]);
+        console.log('FIRE')
+        this.gameStore.fire_missile(this.loc[0], this.loc[1]);
       }
     },
   },
@@ -54,7 +56,6 @@ export default {
 
 <template>
   <button :class="colorMap[val]" @click="clickLog" class="boardCell">
-    <!-- {{ loc[0].toString() + "|" + loc[1].toString() }} -->
     {{ letters[loc[1] + 1].toString() + (loc[0] + 1).toString() }}
   </button>
 </template>

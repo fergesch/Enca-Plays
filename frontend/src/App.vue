@@ -36,13 +36,19 @@ export default {
 
     this.gameStore.socketObj.on("players_ready", (data) => {
       console.log(data);
-      this.gameStore.showModal = false;
-      this.gameStore.gamePhase = data["game_phase"];
+      this.gameStore.modal['show'] = false;
+      this.gameStore['phase'] = data
+      // this.gameStore.phase["primary"] = data["game_phase"];
+      // this.gameStore.phase["secondary"] = data["game_sub_phase"];
+    });
+
+    this.gameStore.socketObj.on("return_missle", (data) => {
+
     });
 
     this.gameStore.socketObj.on("modal_event", (data) => {
-      this.gameStore.modalMessage = data["message"];
-      this.gameStore.showModal = true;
+      this.gameStore.modal['message'] = data["message"];
+      this.gameStore.modal['show'] = true;
     });
   },
   beforeUnmount() {
@@ -71,10 +77,10 @@ export default {
 
   <RouterView />
   <modalPopup
-    :show="gameStore.showModal"
-    :message="gameStore.modalMessage"
-    :blocking="gameStore.modalBlocking"
-    @close="gameStore.showModal = false"
+    :show="gameStore.modal['show']"
+    :message="gameStore.modal['message']"
+    :blocking="gameStore.modal['blocking']"
+    @close="gameStore.modal['show'] = false"
   ></modalPopup>
 </template>
 
