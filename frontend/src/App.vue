@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { useGameStore } from "@/stores/GameStore";
 import { io } from "socket.io-client";
 
-import modalPopup from "@/components/modalPopup.vue";
+import ModalPopup from "@/components/ModalPopup.vue";
 
 export default {
   setup() {
@@ -13,7 +13,7 @@ export default {
   },
 
   components: {
-    modalPopup,
+    ModalPopup,
     RouterLink,
     RouterView,
   },
@@ -76,12 +76,12 @@ export default {
   </header>
 
   <RouterView />
-  <modalPopup
+  <ModalPopup
     :show="gameStore.modal['show']"
     :message="gameStore.modal['message']"
     :blocking="gameStore.modal['blocking']"
     @close="gameStore.modal['show'] = false"
-  ></modalPopup>
+  ></ModalPopup>
 </template>
 
 <style scoped>
