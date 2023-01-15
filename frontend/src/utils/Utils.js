@@ -57,8 +57,7 @@ export function check_collisions(haystack, needle) {
     if (needle.length === haystack[i].length) {
       current = haystack[i];
       for (j = 0; j < needle.length && needle[j] === current[j]; ++j);
-      if (j === needle.length)
-        return i;
+      if (j === needle.length) return i;
     }
   }
   return -1;

@@ -33,7 +33,6 @@ export default {
         this.gameStore.phase["primary"] == "Playing" &&
         this.gameStore.phase["secondary"] == this.gameStore.username
       ) {
-        console.log('FIRE')
         this.gameStore.fire_missile(this.loc[0], this.loc[1]);
       }
     },

@@ -36,18 +36,20 @@ export default {
 
     this.gameStore.socketObj.on("players_ready", (data) => {
       console.log(data);
-      this.gameStore.modal['show'] = false;
-      this.gameStore['phase'] = data
+      this.gameStore.modal["show"] = false;
+      this.gameStore["phase"] = data;
     });
 
     this.gameStore.socketObj.on("return_missile", (data) => {
-      this.gameStore['username'] == data['username'] ? this.gameStore['myMissiles'].push(data['loc']) : this.gameStore['oppMissiles'].push(data['loc']);
-      this.gameStore['phase'] = data['phase']
+      this.gameStore["username"] == data["username"]
+        ? this.gameStore["myMissiles"].push(data["loc"])
+        : this.gameStore["oppMissiles"].push(data["loc"]);
+      this.gameStore["phase"] = data["phase"];
     });
 
     this.gameStore.socketObj.on("modal_event", (data) => {
-      this.gameStore.modal['message'] = data["message"];
-      this.gameStore.modal['show'] = true;
+      this.gameStore.modal["message"] = data["message"];
+      this.gameStore.modal["show"] = true;
     });
   },
   beforeUnmount() {
