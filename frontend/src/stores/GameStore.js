@@ -15,11 +15,11 @@ export const useGameStore = defineStore("GameStore", {
       modal: {
         show: false,
         message: "",
-        blocking: false
+        blocking: false,
       },
       phase: {
         primary: "Setup",
-        secondary: "Submit Ships"
+        secondary: "Carrier Start",
       },
       // values of setup ships, playerX turn, win, lose (playerX turn will allow same event to be sent and can validate on username)
       // can make more specific for setup phase to say ship X start, ship X end, confirm (do modal)
@@ -34,28 +34,28 @@ export const useGameStore = defineStore("GameStore", {
       shipPositions: [
         {
           ship: "Carrier",
-          // locs: [],
-          'locs': [[1, 5],[2, 5],[3, 5],[4, 5],[5, 5]]
+          locs: [],
+          //'locs': [[1, 5],[2, 5],[3, 5],[4, 5],[5, 5]]
         },
         {
           ship: "Battleship",
-          // locs: [],
-          'locs': [[7, 5],[7, 6],[7, 7],[7, 8]]
+          locs: [],
+          //'locs': [[7, 5],[7, 6],[7, 7],[7, 8]]
         },
         {
           ship: "Submarine",
-          // locs: [],
-          'locs': [[3, 1],[4, 1],[5, 1]]
+          locs: [],
+          //'locs': [[3, 1],[4, 1],[5, 1]]
         },
         {
           ship: "Cruiser",
-          // locs: [],
-          'locs': [[9, 2],[9, 3],[9, 4]]
+          locs: [],
+          //'locs': [[9, 2],[9, 3],[9, 4]]
         },
         {
           ship: "Destroyer",
-          // locs: [],
-          'locs': [[0, 0],[0, 1]]
+          locs: [],
+          //'locs': [[0, 0],[0, 1]]
         },
       ],
       myMissiles: [
@@ -81,11 +81,25 @@ export const useGameStore = defineStore("GameStore", {
       return occupied_locations;
     },
 
-    shipText(state) {
-      let currShip = get_ship(state.phase["secondary"]);
-      if (currShip) {
-        let shipLength = get_ship_info(currShip)["size"];
-        return currShip + " (" + shipLength + ")";
+    phaseText(state) {
+      if (state.phase["primary"] == "Setup") {
+        let currShip = get_ship(state.phase["secondary"]);
+        if (currShip) {
+          let shipLength = get_ship_info(currShip)["size"];
+          return "Set ship " + currShip + " (" + shipLength + ")";
+        } else {
+          return "Submit Ships";
+        }
+      } else if (state.phase["primary"] == "Playing") {
+        return state.phase["secondary"] == state.username
+          ? "Your Turn"
+          : "Waiting for opponent";
+      } else if (state.phase["primary"] == "Game Over") {
+        return state.phase["secondary"] == state.username
+          ? "You Win!"
+          : "You Lost :(";
+      } else {
+        return "I BROKE";
       }
     },
 
@@ -223,10 +237,11 @@ export const useGameStore = defineStore("GameStore", {
       }
     },
     end_ship_event(i, j) {
-      let c = check_collisions(this.eligEnds, [i,j])
+      let c = check_collisions(this.eligEnds, [i, j]);
       if (c != -1) {
         this.shipEnd = [i, j];
-        this.phase["secondary"] = get_ship(this.phase["secondary"]) + " Confirm";
+        this.phase["secondary"] =
+          get_ship(this.phase["secondary"]) + " Confirm";
       } else {
         console.log("Bad endpoint");
       }
@@ -235,9 +250,9 @@ export const useGameStore = defineStore("GameStore", {
     submit_ships() {
       this.gamePhase = "Waiting";
       this.phase["secondary"] = "";
-      this.modal['show'] = true;
-      this.modal['message'] = "Waiting for other player";
-      this.modal['blocking'] = true;
+      this.modal["show"] = true;
+      this.modal["message"] = "Waiting for other player";
+      this.modal["blocking"] = true;
       this.socketObj.emit("submit_ships", {
         username: this.username,
         room: this.room,
@@ -245,11 +260,15 @@ export const useGameStore = defineStore("GameStore", {
       });
     },
 
-    fire_missile(a,b) {
+    fire_missile(a, b) {
       //Check for collisions with your missiles
-      console.log(a)
-      if(check_collisions(this.myMissiles, [a,b]) == -1){
-        this.socketObj.emit("fire_missile", { room: this.room, username: this.username, loc: [a,b] });
+      console.log(a);
+      if (check_collisions(this.myMissiles, [a, b]) == -1) {
+        this.socketObj.emit("fire_missile", {
+          room: this.room,
+          username: this.username,
+          loc: [a, b],
+        });
       }
     },
   },

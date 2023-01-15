@@ -51,8 +51,8 @@ export default {
     <div class="player-chips">
       <q-chip icon="person" :label="gameStore.username" />
       <q-chip icon="room" :label="gameStore.room" />
+      <q-chip v-if="gameStore.phaseText" :label="gameStore.phaseText" />
     </div>
-    <div v-if="gameStore.shipText">Set ships {{ gameStore.shipText }}</div>
 
     <GameBoard board="oppBoard" />
     <br />
@@ -65,7 +65,10 @@ export default {
       Confirm Ship
     </button>
     <button
-      v-if="this.gameStore.phase['secondary'].includes('End') || this.gameStore.phase['secondary'].includes('Confirm')"
+      v-if="
+        this.gameStore.phase['secondary'].includes('End') ||
+        this.gameStore.phase['secondary'].includes('Confirm')
+      "
       @click="resetSubPhase"
     >
       Reset Current Ship
