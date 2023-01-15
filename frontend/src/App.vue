@@ -38,12 +38,11 @@ export default {
       console.log(data);
       this.gameStore.modal['show'] = false;
       this.gameStore['phase'] = data
-      // this.gameStore.phase["primary"] = data["game_phase"];
-      // this.gameStore.phase["secondary"] = data["game_sub_phase"];
     });
 
-    this.gameStore.socketObj.on("return_missle", (data) => {
-
+    this.gameStore.socketObj.on("return_missile", (data) => {
+      this.gameStore['username'] == data['username'] ? this.gameStore['myMissiles'].push(data['loc']) : this.gameStore['oppMissiles'].push(data['loc']);
+      this.gameStore['phase'] = data['phase']
     });
 
     this.gameStore.socketObj.on("modal_event", (data) => {

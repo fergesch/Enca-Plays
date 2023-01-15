@@ -77,12 +77,15 @@ def fire_missile(data):
     username = data["username"]
     room = data["room"]
     loc = data["loc"]
+    opp_name = board_actions.get_opp_name(room, username)
     missile_result = board_actions.check_missile(username, room, loc)
-    loc.append(missile_result)
-    
-    # pop value from ship positions if it hits
-    # also check if game over
-    emit('return_missile', {"username": username, "loc": loc}, to=room)
+    if(False):#player wins
+        print('Winner')
+        # emit(win event)
+    else:
+        new_phase = board_actions.update_game_phase(room, "Playing", opp_name)
+        emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
+        
 
 
 if __name__ == '__main__':

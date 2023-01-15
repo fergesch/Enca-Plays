@@ -37,17 +37,20 @@ def add_player(username, room_id):
 
 
 def check_missile(username, room_id, location):
+    opp_name = get_opp_name(room_id, username)
     game_state = GAME_STATES[room_id]
-    missiles = game_state[username]['missiles']
-    missiles.append(location)
-    # opp_ships = []
+    missiles = game_state['players'][username]['missiles']
+    opp_ships = game_state['players'][opp_name]['ship_positions']
+    hit = False
     try:
-        idx = missiles.index(location)
-        missiles.pop(idx)
-        return True
+        idx = opp_ships.index(location)
+        opp_ships.pop(idx) 
+        hit = True
     except ValueError:
-        return False
-
+        pass
+    location.append(hit)
+    missiles.append(location)
+    return location
 
 def check_win(username, room_id):
     game_state = GAME_STATES[room_id]
@@ -58,3 +61,7 @@ def update_game_phase(room_id, primary, secondary):
 	game_state["phase"]["primary"] = primary
 	game_state["phase"]["secondary"] = secondary
 	return game_state["phase"]
+
+def get_opp_name(room_id, active_player):
+    game_state = GAME_STATES[room_id]
+    return [i for i in list(game_state["players"].keys()) if i != active_player][0]

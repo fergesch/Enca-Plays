@@ -249,8 +249,7 @@ export const useGameStore = defineStore("GameStore", {
       //Check for collisions with your missiles
       console.log(a)
       if(check_collisions(this.myMissiles, [a,b]) == -1){
-        console.log('AGAIN')
-        this.socketObj.emit("fire_missle", { room: this.room, username: this.username, loc: [a,b] });
+        this.socketObj.emit("fire_missile", { room: this.room, username: this.username, loc: [a,b] });
       }
     },
   },
