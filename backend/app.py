@@ -77,14 +77,16 @@ def fire_missile(data):
     username = data["username"]
     room = data["room"]
     loc = data["loc"]
-    opp_name = board_actions.get_opp_name(room, username)
+    opp_name = board_actions.get_opp_name(username, room)
     missile_result = board_actions.check_missile(username, room, loc)
-    if(False):#player wins
+    new_phase = board_actions.update_game_phase(room, "Playing", opp_name)
+    if(board_actions.check_win(username, room)):#player wins
+        new_phase = board_actions.update_game_phase(room, "Game Over", username)
         print('Winner')
-        # emit(win event)
-    else:
-        new_phase = board_actions.update_game_phase(room, "Playing", opp_name)
-        emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
+        emit("modal_event", {"room": room, "message": f"{username} WINS!"}, to=room)
+    
+    emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
+    
         
 
 
