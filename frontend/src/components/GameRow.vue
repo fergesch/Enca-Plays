@@ -21,6 +21,7 @@ export default {
     :val="this.gameStore[board][rowNum][j - 1]"
     :loc="[rowNum, j - 1]"
     :board="board"
+    :key="j"
   />
   <br />
 </template>

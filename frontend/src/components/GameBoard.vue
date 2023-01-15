@@ -24,9 +24,11 @@ export default {
 
 <template>
   <!-- make header for letters ABC... -->
-  <div v-for="letter in letters" class="boardCell">{{ letter }}</div>
+  <div v-for="letter in letters" class="boardCell" :key="letter">
+    {{ letter }}
+  </div>
   <br />
-  <GameRow v-for="i in 10" :rowNum="i - 1" :board="board" />
+  <GameRow v-for="i in 10" :rowNum="i - 1" :board="board" :key="i" />
 </template>
 
 <style>
