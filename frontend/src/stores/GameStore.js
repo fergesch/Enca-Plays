@@ -191,7 +191,6 @@ export const useGameStore = defineStore("GameStore", {
           });
         }
       }
-      console.log(matrix);
       return matrix;
     },
 
@@ -208,7 +207,6 @@ export const useGameStore = defineStore("GameStore", {
           });
         }
       }
-      console.log(matrix);
       return matrix;
     },
   },
@@ -262,7 +260,6 @@ export const useGameStore = defineStore("GameStore", {
 
     fire_missile(a, b) {
       //Check for collisions with your missiles
-      console.log(a);
       if (check_collisions(this.myMissiles, [a, b]) == -1) {
         this.socketObj.emit("fire_missile", {
           room: this.room,

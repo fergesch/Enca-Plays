@@ -23,19 +23,13 @@ export default {
       transports: ["websocket", "polling", "flashsocket"],
     });
 
-    // Should try to move the below on commands into another file
-    this.gameStore.socketObj.on("after connect", (data) => {
-      console.log(data);
-    });
 
     this.gameStore.socketObj.on("joined", (data) => {
-      console.log(data);
       this.gameStore.recieve_room(data["room"]);
       this.$router.push("/game");
     });
 
     this.gameStore.socketObj.on("players_ready", (data) => {
-      console.log(data);
       this.gameStore.modal["show"] = false;
       this.gameStore["phase"] = data;
     });

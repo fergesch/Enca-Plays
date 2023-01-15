@@ -10,8 +10,6 @@ export default {
   props: ["val", "loc", "board"],
   methods: {
     clickLog() {
-      // need to handle different phases of the game using this.gameStore.phase["primary"] which will
-      console.log(this.loc, this.val, this.board);
       // condition for phase["primary"] setup and board == myBoard
       if (
         this.board == "myBoard" &&
