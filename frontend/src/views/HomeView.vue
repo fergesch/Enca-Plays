@@ -6,8 +6,6 @@ export default {
     const gameStore = useGameStore();
     return { gameStore };
   },
-
-  // name: "Home",
 };
 </script>
 
