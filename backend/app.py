@@ -86,9 +86,22 @@ def fire_missile(data):
         emit("modal_event", {"room": room, "message": f"{username} WINS!"}, to=room)
     
     emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
+
+
+@socketio.on('kill_button')
+def kill_button():
+    print('KILL KILL KILL')
+    socketio.stop()
+    print('I am DEAD')
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    print("Hello World")
+    # socketio.run(app, debug=True)
+    socketio.stop()
+    return "Hello World"    
     
-        
-
-
+    
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app)
+    # app.run(debug=True)
