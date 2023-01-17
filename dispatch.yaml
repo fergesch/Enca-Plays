@@ -1,0 +1,6 @@
+# one time run of `gcloud app deploy dispatch.yaml` after service was created
+dispatch:
+  - url: "battleship-backend.fergs.app/*"
+    service: battleship-backend
+  - url: "battleship.fergs.app/*"
+    service: battleship-frontend

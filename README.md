@@ -30,9 +30,9 @@ To create local virtual environment run `env_config.sh` from `backend/` director
 
 ```
 source ./.venv/bin/activate
-flask --app backend/app.py --debug run
+flask --app backend/main.py --debug run
 ```
 OR 
 ```
-python backend/app.py
+python backend/main.py
 ```
