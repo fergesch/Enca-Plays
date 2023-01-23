@@ -1,6 +1,5 @@
 import socketio
 from helpers import setup_ships, rand_space
-from time import sleep
 
 server = 'http://127.0.0.1:5000'
 
@@ -16,29 +15,36 @@ class SocketClient:
         self.sio.connect(server)
         self.sio.emit("join", {"room": self.room, "username": self.username})
 
-        sleep(5)
-
-        self.sio.emit(
-            "submit_ships",
-            {'username': self.username, 'room': self.room, 'shipPositions': self.ship_positions},
-            # room=self.room
-        )
-
         @self.sio.on('joined')
-        def on_message(data):
+        def on_joined(data):
+            if data["username"] == self.username:
+                self.sio.emit(
+                    "submit_ships",
+                    {'username': self.username, 'room': self.room,
+                        'shipPositions': self.ship_positions},
+                    # room=self.room
+                )
             print('I joined!')
+
+        @self.sio.on('players_ready')
+        def on_players_ready(data):
+            self.fire_missile(data)
 
         @self.sio.on('return_missile')
         def on_return_missile(data):
-            # {"username": username, "loc": missile_result, "phase": new_phase}
-            if data["username"] == self.username:
-                self.missiles.append(data["loc"])
-            elif data['phase']['secondary'] == self.username:
-                next_shot = rand_space(self.missiles)
-                self.sio.emit(
-                    "fire_missile",
-                    {"room": self.room, "username": self.username, "loc": next_shot}
-                )
+            self.fire_missile(data)
+
+    def fire_missile(self, data):
+        # Computer's turn
+        if data['phase']['secondary'] == self.username:
+            next_shot = rand_space(self.missiles)
+            self.sio.emit(
+                "fire_missile",
+                {"room": self.room, "username": self.username, "loc": next_shot}
+            )
+        # Getting response of this computers shot, other players turn to play
+        elif data.get("username", None) == self.username:
+            self.missles.append(data["loc"])
 
     def emit_test(self):
         self.sio.emit("test", {"room": self.room,
