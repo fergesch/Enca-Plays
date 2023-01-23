@@ -2,10 +2,6 @@
 GAME_STATES = {}
 PLAYER_ONE = "player1"
 PLAYER_TWO = "player2"
-NOTHING = 0
-SHIP = 1
-HIT = 2
-MISS = 3
 
 
 def initialize_player_state(player_num):
@@ -67,3 +63,6 @@ def update_game_phase(room_id, primary, secondary):
 def get_opp_name(username, room_id):
     game_state = GAME_STATES[room_id]
     return [i for i in list(game_state["players"].keys()) if i != username][0]
+
+def delete_game(room_id):
+    del GAME_STATES[room_id]

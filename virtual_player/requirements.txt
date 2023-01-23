@@ -1,0 +1,7 @@
+python-socketio
+flask
+flask-cors
+autopep8
+requests
+websocket-client
+ipykernel

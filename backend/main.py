@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
+import requests
 import logging
 import random
 import board_actions
@@ -84,6 +85,8 @@ def fire_missile(data):
         new_phase = board_actions.update_game_phase(room, "Game Over", username)
         print('Winner')
         emit("modal_event", {"room": room, "message": f"{username} WINS!"}, to=room)
+        board_actions.delete_game(room)
+        requests.get('http://127.0.0.1:5001/end', params={"room": room})
     
     emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
 
@@ -99,7 +102,7 @@ def health_check():
     print("Hello World")
     # socketio.run(app, debug=True)
     socketio.stop()
-    return "Hello World"    
+    return "Hello World"
     
     
 if __name__ == '__main__':
