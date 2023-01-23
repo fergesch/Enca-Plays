@@ -3,3 +3,5 @@ flask-socketio
 simple-websocket
 flask-cors
 autopep8
+gunicorn
+requests

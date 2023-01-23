@@ -23,16 +23,3 @@ npm run dev
 doesn't have to initialize a websocket client
 
 * Game state will be entirely managed in Pina store
-
-## BACKEND
-
-To create local virtual environment run `env_config.sh` from `backend/` directory
-
-```
-source ./.venv/bin/activate
-flask --app backend/main.py --debug run
-```
-OR 
-```
-python backend/main.py
-```

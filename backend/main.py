@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
@@ -106,5 +107,5 @@ def health_check():
     
     
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
     # app.run(debug=True)
