@@ -52,8 +52,7 @@ export function fill_gaps(start, end) {
 }
 
 export function check_collisions(haystack, needle) {
-  var i;
-  for (i = 0; i < haystack.length; ++i) {
+  for (let i = 0; i < haystack.length; ++i) {
     if (haystack[i][0] == needle[0] && haystack[i][1] == needle[1]){
       return i
     }
