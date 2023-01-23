@@ -52,12 +52,10 @@ export function fill_gaps(start, end) {
 }
 
 export function check_collisions(haystack, needle) {
-  var i, j, current;
+  var i;
   for (i = 0; i < haystack.length; ++i) {
-    if (needle.length === haystack[i].length) {
-      current = haystack[i];
-      for (j = 0; j < needle.length && needle[j] === current[j]; ++j);
-      if (j === needle.length) return i;
+    if (haystack[i][0] == needle[0] && haystack[i][1] == needle[1]){
+      return i
     }
   }
   return -1;
