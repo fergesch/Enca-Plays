@@ -10,8 +10,8 @@ steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args: ['run', 'deploy', 'battleship-backend', '--image', 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA', '--region', 'us-central1']
-images:
-- ['gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA']
+  images:
+  - 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA'
 
 # Build and deploy frontend
 - name: node:16.18.1
