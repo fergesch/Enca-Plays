@@ -5,3 +5,5 @@ flask-cors
 autopep8
 gunicorn
 requests
+ipython
+google-cloud-firestore
