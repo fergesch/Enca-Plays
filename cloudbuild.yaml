@@ -9,14 +9,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args:
-  - 'run'
-  - 'deploy'
-  - 'battleship-backend'
-  - '--image'
-  - 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA'
-  - '--region'
-  - 'us-central1'
+  args: ['run', 'deploy', 'battleship-backend', '--image', 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA', '--region', 'us-central1']
 images:
 - 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA'
 
