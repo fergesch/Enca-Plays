@@ -63,7 +63,7 @@ def submit_ships(data):
     username = data['username']
     room = data['room']
     board_actions.place_player_ships(username, room, ship_positions)
-    game_state = board_actions.get_game(room)
+    _, game_state = board_actions.get_game(room)
     player_keys = list(game_state["players"].keys())
     ready_count = [k for k in player_keys if game_state["players"]
                    [k]["ship_positions"] is not None]
