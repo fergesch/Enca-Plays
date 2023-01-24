@@ -1,7 +1,7 @@
 steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA', './backend']
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA']
@@ -20,12 +20,12 @@ images:
 - 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA'
 
 # Build and deploy frontend
-# - name: node:16.18.1
-#   entrypoint: npm
-#   args: ["install", "--prefix", "./frontend"]
-# - name: node:16.18.1
-#   entrypoint: npm
-#   args: ["--prefix", "./frontend", "run", "build"]
-# - name: "gcr.io/cloud-builders/gcloud"
-#   args: ["app", "deploy", "./frontend/app.yaml"]
-# timeout: "1600s"
+- name: node:16.18.1
+  entrypoint: npm
+  args: ["install", "--prefix", "./frontend"]
+- name: node:16.18.1
+  entrypoint: npm
+  args: ["--prefix", "./frontend", "run", "build"]
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ["app", "deploy", "./frontend/app.yaml"]
+timeout: "1600s"
