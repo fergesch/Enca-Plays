@@ -91,6 +91,12 @@ def fire_missile(data):
     
     emit('return_missile', {"username": username, "loc": missile_result, "phase": new_phase}, to=room)
 
+@socketio.on('disconnect')
+def disconnect():
+    # should check what connections we have and room exist
+    # compare that with what is in GAME_STATES
+    # cleanup when necessary
+    print('User disconnect')
 
 @socketio.on('kill_button')
 def kill_button():
@@ -105,6 +111,13 @@ def health_check():
     socketio.stop()
     return "Hello World"
     
+@app.route('/fetch_rooms', methods=['GET'])
+def fetch_rooms():
+    return str(get_rooms())
+
+@app.route('/fetch_game_states', methods=['GET'])
+def fetch_game_states():
+    return GAME_STATES
     
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
