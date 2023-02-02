@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room, close_room
 import requests
 import logging
 import uuid
@@ -97,6 +97,7 @@ def fire_missile(data):
         print('Winner')
         emit("modal_event", {"room": room,
              "message": f"{username} WINS!"}, to=room)
+        close_room(room)
         # ba.delete_game(room)
         # requests.get('http://127.0.0.1:5001/end', params={"room": room})
     fs.set_game(room, game_state)
