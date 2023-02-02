@@ -5,7 +5,8 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 import requests
 import logging
 import uuid
-import board_actions
+import firestore as fs
+import board_actions as ba
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
@@ -23,9 +24,10 @@ def get_rooms():
     return response
 
 
-def join_room_action(username, room):
+def join_room_action(username, room, game_state):
     join_room(room)
     print(username + ' has entered the room.')
+    fs.set_game(room, game_state)
     emit('joined', {'username': username, 'room': room}, to=room)
 
 
@@ -34,8 +36,8 @@ def on_create_room(data):
     username = data['username']
     room = uuid.uuid4().hex
     room = str(room)
-    board_actions.initialize_game(username, room)
-    join_room_action(username, room)
+    game_state = ba.initialize_game(username, room)
+    join_room_action(username, room, game_state)
 
 
 @socketio.on('join')
@@ -46,15 +48,18 @@ def on_join(data):
     if room not in rooms.keys():
         emit("modal_event", {
              "room": room, "message": "Room does not exist. Enter another room or create new game."})
+        return None
     elif rooms[room] >= 2:
         emit("modal_event", {"room": room,
              "message": "Too many players in that room"})
-    elif username in board_actions.get_players(room):
+        return None
+    game_state = fs.get_game(room)
+    if username in ba.get_players(game_state):
         emit("modal_event", {
              "room": room, "message": "Name already in use. Pick a different username"})
     else:
-        board_actions.add_player(username, room)
-        join_room_action(username, room)
+        game_state = ba.add_player(username, game_state)
+        join_room_action(username, room, game_state)
 
 
 @socketio.on("submit_ships")
@@ -62,16 +67,14 @@ def submit_ships(data):
     ship_positions = data["shipPositions"]
     username = data['username']
     room = data['room']
-    board_actions.place_player_ships(username, room, ship_positions)
-    _, game_state = board_actions.get_game(room)
-    player_keys = list(game_state["players"].keys())
-    ready_count = [k for k in player_keys if game_state["players"]
-                   [k]["ship_positions"] is not None]
+    game_state = fs.get_game(room)
+    game_state = ba.place_player_ships(username, game_state, ship_positions)
+    player_keys = ba.get_players(game_state)
+    ready_count = [k for k in player_keys if game_state["players"][k]["ship_positions"] is not None]
     if len(ready_count) == 2:
-        event_data = board_actions.update_game_phase(
-            room, "Playing", player_keys[0])
-        emit("players_ready", event_data, to=room)
-
+        game_state = ba.update_game_phase(game_state, "Playing", player_keys[0])
+        emit("players_ready", game_state['phase'], to=room)
+    fs.set_game(room, game_state)
 
 @socketio.on('grid_click')
 def handle_my_custom_event(json):
@@ -83,20 +86,20 @@ def fire_missile(data):
     username = data["username"]
     room = data["room"]
     loc = data["loc"]
-    opp_name = board_actions.get_opp_name(username, room)
-    missile_result = board_actions.check_missile(username, room, loc)
-    new_phase = board_actions.update_game_phase(room, "Playing", opp_name)
-    if (board_actions.check_win(username, room)):  # player wins
-        new_phase = board_actions.update_game_phase(
-            room, "Game Over", username)
+    game_state = fs.get_game(room)
+    opp_name = ba.get_opp_name(username, game_state)
+    game_state, missile_result = ba.check_missile(username, game_state, loc)
+    game_state = ba.update_game_phase(game_state, "Playing", opp_name)
+    emit('return_missile', {"username": username,
+         "loc": missile_result, "phase": game_state['phase']}, to=room)
+    if (ba.check_win(username, game_state)):  # player wins
+        game_state = ba.update_game_phase(game_state, "Game Over", username)
         print('Winner')
         emit("modal_event", {"room": room,
              "message": f"{username} WINS!"}, to=room)
-        # board_actions.delete_game(room)
-        requests.get('http://127.0.0.1:5001/end', params={"room": room})
-
-    emit('return_missile', {"username": username,
-         "loc": missile_result, "phase": new_phase}, to=room)
+        # ba.delete_game(room)
+        # requests.get('http://127.0.0.1:5001/end', params={"room": room})
+    fs.set_game(room, game_state)
 
 
 @socketio.on('disconnect')
