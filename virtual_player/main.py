@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
 
-# from socket_client import SocketClient
 import cpu_player
 
 app = Flask(__name__)

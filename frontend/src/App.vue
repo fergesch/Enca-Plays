@@ -31,7 +31,7 @@ export default {
 
     this.gameStore.socketObj.on("players_ready", (data) => {
       this.gameStore.modal["show"] = false;
-      this.gameStore["phase"] = data;
+      this.gameStore["phase"] = data["phase"];
     });
 
     this.gameStore.socketObj.on("return_missile", (data) => {

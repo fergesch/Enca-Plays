@@ -218,9 +218,9 @@ export const useGameStore = defineStore("GameStore", {
     join_game_event() {
       this.socketObj.emit("join", { room: this.room, username: this.username });
     },
-    // button_click_event(i, j) {
-    //   this.socketObj.emit("grid_click", { i: i, j: j });
-    // },
+    cpu_game_event() {
+      this.socketObj.emit("cpu_game", { username: this.username });
+    },
 
     recieve_room(room) {
       this.room = room;

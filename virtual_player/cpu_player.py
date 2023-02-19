@@ -1,5 +1,4 @@
 from socket_client import SocketClient
-# from helpers import setup_ships, rand_space
 
 PLAYER_STATES = {}
 

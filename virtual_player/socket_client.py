@@ -36,7 +36,10 @@ class SocketClient:
 
     def fire_missile(self, data):
         # Computer's turn
-        if data['phase']['secondary'] == self.username:
+        print(data)
+        primary = data['phase']['primary']
+        secondary = data['phase']['secondary']
+        if primary == 'Playing' and  secondary == self.username:
             next_shot = rand_space(self.missiles)
             self.sio.emit(
                 "fire_missile",
@@ -44,7 +47,7 @@ class SocketClient:
             )
         # Getting response of this computers shot, other players turn to play
         elif data.get("username", None) == self.username:
-            self.missles.append(data["loc"])
+            self.missiles.append(data["loc"])
 
     def emit_test(self):
         self.sio.emit("test", {"room": self.room,

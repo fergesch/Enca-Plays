@@ -13,6 +13,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, logger=True, engineio_logger=True, cors_allowed_origins='*')
 
+virtual_player_url = 'http://127.0.0.1:5001'
 # Deal with people disconnecting -- close room?
 
 
@@ -38,6 +39,7 @@ def on_create_room(data):
     room = str(room)
     game_state = ba.initialize_game(username, room)
     join_room_action(username, room, game_state)
+    return room
 
 
 @socketio.on('join')
@@ -61,6 +63,11 @@ def on_join(data):
         game_state = ba.add_player(username, game_state)
         join_room_action(username, room, game_state)
 
+@socketio.on("cpu_game")
+def cpu_game(data):
+    room = on_create_room(data)
+    requests.get(f'{virtual_player_url}/create', params={"room": room})
+
 
 @socketio.on("submit_ships")
 def submit_ships(data):
@@ -71,10 +78,12 @@ def submit_ships(data):
     game_state = ba.place_player_ships(username, game_state, ship_positions)
     player_keys = ba.get_players(game_state)
     ready_count = [k for k in player_keys if game_state["players"][k]["ship_positions"] is not None]
+    fs.set_game(room, game_state)
     if len(ready_count) == 2:
         game_state = ba.update_game_phase(game_state, "Playing", player_keys[0])
-        emit("players_ready", game_state['phase'], to=room)
-    fs.set_game(room, game_state)
+        fs.set_game(room, game_state)
+        emit("players_ready", {"phase": game_state['phase']}, to=room)
+
 
 @socketio.on('grid_click')
 def handle_my_custom_event(json):
@@ -89,18 +98,26 @@ def fire_missile(data):
     game_state = fs.get_game(room)
     opp_name = ba.get_opp_name(username, game_state)
     game_state, missile_result = ba.check_missile(username, game_state, loc)
-    game_state = ba.update_game_phase(game_state, "Playing", opp_name)
-    emit('return_missile', {"username": username,
-         "loc": missile_result, "phase": game_state['phase']}, to=room)
-    if (ba.check_win(username, game_state)):  # player wins
-        game_state = ba.update_game_phase(game_state, "Game Over", username)
+    win_bool = ba.check_win(username, game_state)
+    game_state = ba.update_game_phase(game_state, "Game Over", username) if win_bool else ba.update_game_phase(game_state, "Playing", opp_name)
+    fs.set_game(room, game_state)
+    emit('return_missile',
+        {
+            "username": username,
+            "loc": missile_result,
+            "phase": game_state['phase']
+        },
+        to=room
+    )
+    if win_bool:  # player wins
+        # game_state = ba.update_game_phase(game_state, "Game Over", username)
         print('Winner')
+        # fs.set_game(room, game_state)
         emit("modal_event", {"room": room,
              "message": f"{username} WINS!"}, to=room)
         close_room(room)
         # ba.delete_game(room)
-        # requests.get('http://127.0.0.1:5001/end', params={"room": room})
-    fs.set_game(room, game_state)
+        requests.get(f'{virtual_player_url}/end', params={"room": room})
 
 
 @socketio.on('disconnect')
