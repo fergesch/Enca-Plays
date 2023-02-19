@@ -29,3 +29,9 @@ steps:
 timeout: "1600s"
 images:
 - 'gcr.io/$PROJECT_ID/battleship-backend:$COMMIT_SHA'
+
+# Deploy virtual player as flask app
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy ./virtual_player/app.yaml']
+  timeout: '1600s'
